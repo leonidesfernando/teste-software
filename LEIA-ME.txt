@@ -1,0 +1,7 @@
+Este projeto usa SpringBoot, Lombok se usar uma IDE que tem plugins para esses frameworks, recomenda-se que faça a instalação.
+
+No IntelijIDEA:
+1. Habilitar annotaion processing:
+    Settings->Compiler->Annotation Processors: "Enable annotation processing"
+2. Instalar o plugin do Lombok, Spring e Spring Boot(via repositórios)
+3. Reiniciar o IDEA
