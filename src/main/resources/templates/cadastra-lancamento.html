@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Lançamento</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.0/css/bootstrap-datepicker.css" integrity="sha256-hAJmzibna+yekGzrC0d2adi25IbGDXYE0erhJvZOcEg=" crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js" integrity="sha256-1hjUhpc44NwiNg8OwMu2QzJXhD8kcj+sJA3aCQZoUjg=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/locale/br.js" integrity="sha256-w8v7P8XDtPBcJuAJYug57/hvVciq6TBw6pv4DPtHDeE=" crossorigin="anonymous"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.0/locales/bootstrap-datepicker.pt-BR.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js" integrity="sha256-U0YLVHo5+B3q9VEC4BJqRngDIRFCjrhAIZooLdqVOcs=" crossorigin="anonymous"></script>
+
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"></link>
+    <script>
+
+        $(document).ready(function () {
+            $('#datepicker').datepicker({
+                format: "dd/mm/yyyy",
+                language: "pt-BR",
+                minViewMode: 0
+        });
+        });
+
+        $(function() {
+            $('#valor').maskMoney({prefix:'R$ ', allowNegative: true, thousands:'.', decimal:',', affixesStay: false});
+        });
+
+        $(function() {
+            $( "#datepicker" ).datepicker();
+        });
+    </script>
+
+</head>
+<body style="padding-top: 10px;">
+
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Cadastro de Lançamento</h4>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <form class="form-horizontal" th:object="${lancamento}" th:action="@{/salvar}" method="POST" style="margin: 10px">
+
+                        <div class="row">
+                            <div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+                                <div th:each="detailedError : ${#fields.detailedErrors()}">
+                                    <span th:text="${detailedError.message}"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="hidden" id="id" th:field="*{id}" th:value="${id}" />
+
+                        <div class="row ">
+                            <div class="col-md-3 form-group table-responsive" >
+                                <table style="width: 100%;">
+                                    <tr>
+                                        <td th:each="tp : ${tiposLancamento}">
+                                            <input type="radio" th:field="*{tipoLancamento}" th:value="${tp}" />
+                                            <label th:for="${#ids.prev('tipoLancamento')}" th:text="${tp.tipo}"></label>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group" th:classappend="${#fields.hasErrors('descricao')}? 'has-error'">
+                                    <label>Descrição</label>
+                                    <input type="text" class="form-control input-sm" th:field="*{descricao}" autofocus="autofocus" placeholder="Informe a descrição" maxlength="64"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 form-group" th:classappend="${#fields.hasErrors('dataLancamento')}? 'has-error'">
+                                <label>Data</label>
+                                <input type="text" class="form-control input-sm" id="datepicker" th:field="*{dataLancamento}" placeholder="Informe a data"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 form-group" th:classappend="${#fields.hasErrors('valor')}? 'has-error'">
+                                <label>Valor</label>
+                                <input id="valor" type="text" class="form-control input-sm" th:field="*{valor}" placeholder="Informe o valor 0,00" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 form-group">
+                                <button id="btnSalvar" type="submit" class="btn btn-primary">Salvar</button>
+                            </div>
+                            <div class="col-md-2 form-group">
+                                <a id="cancelar" class="btn btn-default" th:href="@{/lancamentos/}" >Cancelar</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+</html>

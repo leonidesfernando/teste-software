@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Suíte-Tests por Classes" >
+    <test name="Teste por classes">
+        <classes>
+            <class name="br.ucdb.pos.engenhariasoftware.testesoftware.exemplos.testng.CalculadoraSimplesTest"></class>
+        </classes>
+    </test>
+</suite>
+

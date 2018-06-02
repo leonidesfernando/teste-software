@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Lançamentos</title>
+    <script
+            src="http://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"></link>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.0/locales/bootstrap-datepicker.pt-BR.min.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            $('#dataInicial').datepicker({
+                format: "dd/mm/yyyy",
+                language: "pt-BR",
+                minViewMode: 0
+            });
+        });
+        $(function() {
+            $( "#dataInicial" ).datepicker();
+        });
+
+        $(document).ready(function () {
+            $('#dataFinal').datepicker({
+                format: "dd/mm/yyyy",
+                language: "pt-BR",
+                minViewMode: 0
+            });
+        });
+        $(function() {
+            $( "#dataFinal" ).datepicker();
+        });
+    </script>
+
+    <script type="text/javascript" th:inline="javascript">
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+
+            /*<![CDATA[*/
+            var data = google.visualization.arrayToDataTable(eval(/*[[${data}]]*/));
+
+            var options = {
+                title: /*[[${titulo}]]*/,
+                is3D: true,
+            };
+            /*]]>*/
+            var chart = new google.visualization.PieChart(document.getElementById('pieChart'));
+
+            google.visualization.events.addListener(chart, 'ready', function() {
+                // Do something like ...
+                $('#loadingDiv').css('visibility', 'visible'); // provided this was already hidden
+            });
+
+            chart.draw(data, options);
+        }
+        $(window).resize(function(){
+            drawChart();
+        });
+
+    </script>
+
+    <style>
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 8px solid #3498db;
+            width: 60px;
+            height: 60px;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+            text-align: center;
+        }
+    </style>
+
+
+</head>
+<body style="padding-top: 10px;">
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>Dashboard</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-1" style="padding-top: 25px">
+                            <a class="btn btn-primary" title="Listagem" th:href="@{/lancamentos}">
+                                <i class="glyphicon glyphicon-list-alt"></i>
+                            </a>
+                        </div>
+
+                        <form th:action="@{/dashboard}" method="POST">
+                            <div class="row">
+                                <div class="col-md-2 form-group">
+                                    <label>Data inicial</label>
+                                    <input type="text" class="form-control input-sm" th:object="${dataInicial}" id="dataInicial" name="dataInicial" required="true" placeholder="Informe a data inicial"/>
+                                </div>
+                                <div class="col-md-2 form-group">
+                                    <label>Data final</label>
+                                    <input type="text" class="form-control input-sm" id="dataFinal" name="dataFinal" th:object="${dataFinal}" placeholder="Informe a data final" required="true"/>
+                                </div>
+                                <div class="col-md-2 form-group" style="padding-top: 25px;">
+                                    <button id="btnFiltrar" type="submit" class="btn btn-info">Filtrar</button>
+                                </div>
+                            </div>
+                            <div style="display: block;">
+                                <div class="panel panel-default" style="width: 800px; height: 600px; margin-left: 8px!important;">
+                                    <div class="panel-body" id="pieChart" style="width: 100%; height: 100%;">
+                                        <div id="loadingDiv" class="loader"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</body>
+</html>
