@@ -26,14 +26,6 @@ public class CalculadoraSimplesTest {
         CalculadoraSimples calculadoraSimples = new CalculadoraSimples();
         assertTrue(calculadoraSimples.soma(-10, 20) == 10);
     }
-
-    @Test(expectedExceptions = NumberFormatException.class)
-    public void dividePorZeroTest(){
-        CalculadoraSimples calculadoraSimples = new CalculadoraSimples();
-        BigDecimal valor = calculadoraSimples.divide(0, 0);
-        System.out.println(valor);
-        assertTrue(valor.doubleValue() == 0);
-    }
 }
 
 

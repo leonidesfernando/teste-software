@@ -20,6 +20,7 @@ public class MoneyDeserialize extends JsonDeserializer<BigDecimal> {
         }
         final BigDecimal valor = new BigDecimal(valorString
                 .trim()
+                .replace(".", "")
                 .replace(",", ".")
                 .replace("R$", "")
                 .trim());

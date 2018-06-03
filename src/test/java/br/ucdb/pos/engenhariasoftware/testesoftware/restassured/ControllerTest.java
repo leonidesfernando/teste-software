@@ -17,29 +17,6 @@ import static org.testng.Assert.assertEquals;
 public class ControllerTest {
 
     @Test
-    public void editarTest(){
-
-        Response response = given()
-                .pathParam("id", 8).when().get("/editar/{id}");
-
-        final String html = response.body().asString();
-        XmlPath xmlPath = new XmlPath(XmlPath.CompatibilityMode.HTML, html);
-        String titulo = xmlPath.getString("html.body.div.div.h4");
-        assertEquals(titulo, "Cadastro de Lançamento");
-        assertEquals(response.statusCode(), 200);
-    }
-
-    @Test
-    public void removeTest(){
-        Response response = given().pathParam("id", 131)
-                .when().get("/remover/{id}");
-        assertEquals(response.getStatusCode(), 200);
-        assertEquals("Lançamentos",response.body().htmlPath()
-                .getString("html.body.div.div.div.div.h4").toString());
-    }
-
-
-    @Test
     public void salvarTest(){
         Response response = given().when()
                 .formParam("descricao", "Assured Rest")
@@ -49,23 +26,43 @@ public class ControllerTest {
                 .header("Content-Type", "application/x-www-form-urlencoded") // opcional
                 .post("/salvar");
 
-        assertEquals(response.getStatusCode(), 200);
+        assertEquals(response.getStatusCode(), 302);
     }
 
+    @Test
+    public void editarTest(){
+
+        Response response = given()
+                .pathParam("id", 1).when().get("/editar/{id}");
+
+        final String html = response.body().asString();
+        XmlPath xmlPath = new XmlPath(XmlPath.CompatibilityMode.HTML, html);
+        String titulo = xmlPath.getString("html.body.div.div.div.h4");
+        assertEquals(titulo, "Cadastro de Lançamento");
+        assertEquals(response.statusCode(), 200);
+    }
 
     @Test
     public void buscandoComPostTest() {
         Response response = given()
                 .when()
-                .body("jmeter")
-                .post("/lancamentos");
+                .body("Assured")
+                .post("/buscaLancamentos");
 
         assertEquals(response.getStatusCode(), 200);
 
         InputStream in = response.asInputStream();
         List<Lancamento> list = JsonPath.with(in)
                 .getList("lancamentos", Lancamento.class);
-        assertEquals(list.size(), 4);
+        assertEquals(list.size(), 1);
     }
 
+    @Test
+    public void removeTest(){
+        Response response = given().pathParam("id", 1)
+                .when().get("/remover/{id}");
+        assertEquals(response.getStatusCode(), 200);
+        assertEquals("Lançamentos",response.body().htmlPath()
+                .getString("html.body.div.div.div.div.div.h4").toString());
+    }
 }
