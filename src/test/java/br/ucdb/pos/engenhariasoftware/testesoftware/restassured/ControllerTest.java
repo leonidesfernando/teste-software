@@ -1,6 +1,5 @@
 package br.ucdb.pos.engenhariasoftware.testesoftware.restassured;
 
-import br.ucdb.pos.engenhariasoftware.testesoftware.converter.StringToMoneyConverter;
 import br.ucdb.pos.engenhariasoftware.testesoftware.modelo.Lancamento;
 import io.restassured.path.json.JsonPath;
 import io.restassured.path.xml.XmlPath;
@@ -8,7 +7,6 @@ import io.restassured.response.Response;
 import org.testng.annotations.Test;
 
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
