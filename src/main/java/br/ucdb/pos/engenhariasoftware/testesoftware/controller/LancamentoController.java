@@ -22,19 +22,36 @@ public class LancamentoController {
 	@Autowired
 	private LancamentoService lancamentoService;
 
+	private int paginaCorrente;
+
 	@PostMapping("/buscaLancamentos")
     public ResponseEntity<ResultadoVO> buscaAjax(@RequestBody String itemBusca){
-
         ResultadoVO resultadoVO = lancamentoService.buscaAjax(itemBusca);
 	    return ResponseEntity.ok(resultadoVO);
     }
 
     @GetMapping("/lancamentos")
-    public ModelAndView buscar(){
+    public ModelAndView lancamentos(){
+        return geraRetornoLancamentos(1);
+    }
+
+    @GetMapping("/lancamentos/{p}")
+    public ModelAndView buscar(@PathVariable("p") Integer pagina){
+        return geraRetornoLancamentos(pagina);
+    }
+
+    private ModelAndView geraRetornoLancamentos(int pagina){
+        final List<Lancamento> lancamentos = lancamentoService.buscaTodos(pagina);
+        Long totalRegistros = lancamentoService.conta(null);
+        List<Integer> paginas = lancamentoService.getPaginas(totalRegistros.intValue());
+        int tamanhoPagina = lancamentos.size() >= lancamentoService.tamanhoPagina() ? lancamentoService.tamanhoPagina() : lancamentos.size();
+        paginaCorrente = pagina;
 
         final ModelAndView mv = new ModelAndView("lancamentos");
-
-        final List<Lancamento> lancamentos = lancamentoService.buscaTodos();
+        mv.addObject("p", pagina);
+        mv.addObject("tamanhoPagina", tamanhoPagina);
+        mv.addObject("totalRegistros", totalRegistros);
+        mv.addObject("paginas", paginas);
         mv.addObject("lancamentos", lancamentos);
         mv.addObject("totalEntrada", lancamentoService.getTotalEntrada(lancamentos));
         return mv.addObject("totalSaida", lancamentoService.getTotalSaida(lancamentos));
@@ -56,7 +73,19 @@ public class LancamentoController {
             return lancamento(lancamento);
         }
         lancamentoService.salvar(lancamento);
-        return new RedirectView("/lancamentos");
+        ajustaPaginaCorrente();
+        return new RedirectView("/lancamentos/" + paginaCorrente);
+    }
+
+    private void ajustaPaginaCorrente() {
+        Long totalRegistros = lancamentoService.conta(null);
+        int numeroPaginas = lancamentoService.calculaNumeroPaginas(totalRegistros.intValue());
+        if(paginaCorrente < 1){
+            paginaCorrente = 1;
+
+        }else if(paginaCorrente > numeroPaginas){
+            paginaCorrente = numeroPaginas;
+        }
     }
 
     @GetMapping("/editar/{id}")
@@ -69,6 +98,7 @@ public class LancamentoController {
     public RedirectView remover(@PathVariable("id") Long id){
 
         lancamentoService.remover(id);
-        return new RedirectView("/lancamentos");
+        ajustaPaginaCorrente();
+        return new RedirectView("/lancamentos/" + paginaCorrente);
     }
 }

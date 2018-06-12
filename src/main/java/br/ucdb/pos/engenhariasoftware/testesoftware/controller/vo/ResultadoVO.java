@@ -15,10 +15,17 @@ public class ResultadoVO implements Serializable {
     private String totalEntrada;
     @Getter
     private List<LancamentoVO> lancamentos;
+    @Getter
+    private int tamanhoPagina;
+    @Getter
+    private long totalRegistros;
 
-    public ResultadoVO(String totalSaida, String totalEntrada, List<LancamentoVO> lancamentos) {
+
+    public ResultadoVO(String totalSaida, String totalEntrada, List<LancamentoVO> lancamentos, int tamanhoPagina, long totalRegistros) {
         this.totalSaida = totalSaida;
         this.totalEntrada = totalEntrada;
         this.lancamentos = lancamentos;
+        this.tamanhoPagina = tamanhoPagina;
+        this.totalRegistros = totalRegistros;
     }
 }

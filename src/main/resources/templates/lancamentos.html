@@ -29,75 +29,94 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div id="feedback" />
+                    <form class="col-md-12" id="form-busca">
+                        <div class="row">
+                            <div id="feedback" />
 
-                        <form class="col-md-12" id="form-busca">
-                            <div class="form-group">
-                                <div class="col-md-9" style="padding-left: 0 !important;padding-top: 5px;">
-                                    <input type="text" class="form-control" autofocus="autofocus" required="required" id="itemBusca"
-                                           placeholder="Busca por: descrição ou tipo"/>
-                                </div>
-                                <div class="col-md-1">
-                                    <button type="submit" id="bth-search"
-                                            class="btn btn-primary">Buscar
-                                    </button>
-                                </div>
-                                <div class="col-md-1">
-                                    <a class="btn btn-info" id="recarregar" th:href="@{/lancamentos/}" >Recarregar</a>
-                                </div>
-                                <div class="col-md-1">
-                                    <a class="btn btn-primary" title="Gráfico" th:href="@{/dashboard}">
-                                        <i class="glyphicon glyphicon-stats"></i>
-                                    </a>
-                                </div>
-                            </div>
 
-                        </form>
-                    </div>
-                    <div class="row" style="padding-top: 2px;">
-                        <div class="col-md-12">
-                            <div id="divTabelaLancamentos" class="table-responsive">
-                                <div th:if="${#lists.isEmpty(lancamentos)}">
-                                    <table id="tabelaLancamentos" class="table table-sm table-striped table-hover table-bordered"><thead><tr><th style="text-align: center;">Não há lançamentos cadastrados</th></tr></thead></table>
+                                <div class="form-group">
+                                    <div class="col-md-9" style="padding-left: 0 !important;padding-top: 5px;">
+                                        <input type="text" class="form-control" autofocus="autofocus" required="required" id="itemBusca"
+                                               placeholder="Busca por: descrição ou tipo"/>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button type="submit" id="bth-search"
+                                                class="btn btn-primary">Buscar
+                                        </button>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <a class="btn btn-info" id="recarregar" th:href="@{/lancamentos/1}" >Recarregar</a>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <a class="btn btn-primary" title="Gráfico" th:href="@{/dashboard}">
+                                            <i class="glyphicon glyphicon-stats"></i>
+                                        </a>
+                                    </div>
                                 </div>
-                                <table id="tabelaLancamentos" class="table table-sm table-striped table-hover table-bordered" th:if="${not #lists.isEmpty(lancamentos)}">
-                                    <thead>
-                                    <tr>
-                                        <th>Descrição</th>
-                                        <th>Data Lançamento</th>
-                                        <th>Valor</th>
-                                        <th>Tipo</th>
-                                        <th></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:each="l : ${lancamentos}">
-                                        <td th:text="${l.descricao}"></td>
-                                        <td th:text="${#dates.format(l.dataLancamento, 'dd/MM/yyyy')}"></td>
-                                        <td th:text="${#numbers.formatDecimal(l.valor,0,'POINT', 2, 'COMMA')}"></td>
-                                        <td th:text="${l.tipoLancamento.tipo}"></td>
-                                        <td style="width: 12%">
-                                            <div class="btn-group pull-right">
-                                                <a class="btn btn-sm btn-primary" th:id="editar+${l.id}" th:href="@{/editar/{id}(id=${l.id})}" >Editar</a>
-                                                <a class="delete btn btn-sm btn-danger" th:id="remover+${l.id}" th:href="@{/remover/{id}(id=${l.id})}">Excluir</a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                    <tfoot>
-                                    <tr>
-                                        <th colspan="5" class="text-danger">Total saída: R$ <span th:text="${#numbers.formatDecimal(totalSaida,0,'POINT', 2, 'COMMA')}"/> </th>
-                                    </tr>
-                                    <tr>
-                                        <th colspan="5" class="text-success">Total entrada: R$ <span th:text="${#numbers.formatDecimal(totalEntrada,0,'POINT', 2, 'COMMA')}"/> </th>
-                                    </tr>
-                                    </tfoot>
-                                </table>
+
+                                <input type="hidden" id="p" th:object="${p}" th:value="${p}" />
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-right text-muted">
+                                <strong>
+                                    Exibindo <span id="tamanhoPagina" th:text="${tamanhoPagina}"></span> de
+                                    <span id="totalRegistros" th:text="${totalRegistros}"></span> lançamentos encontrados.
+                                </strong>
                             </div>
                         </div>
-                    </div>
+                        <div class="row" style="padding-top: 2px;">
+                            <div class="col-md-12">
+                                <div id="divTabelaLancamentos" class="table-responsive">
+                                    <div th:if="${#lists.isEmpty(lancamentos)}">
+                                        <table id="tabelaLancamentos" class="table table-sm table-striped table-hover table-bordered"><thead><tr><th style="text-align: center;">Não há lançamentos cadastrados</th></tr></thead></table>
+                                    </div>
+                                    <table id="tabelaLancamentos" class="table table-sm table-striped table-hover table-bordered" th:if="${not #lists.isEmpty(lancamentos)}">
+                                        <thead>
+                                        <tr>
+                                            <th>Descrição</th>
+                                            <th>Data Lançamento</th>
+                                            <th>Valor</th>
+                                            <th>Tipo</th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="l : ${lancamentos}">
+                                            <td th:text="${l.descricao}"></td>
+                                            <td th:text="${#dates.format(l.dataLancamento, 'dd/MM/yyyy')}"></td>
+                                            <td th:text="${#numbers.formatDecimal(l.valor,0,'POINT', 2, 'COMMA')}"></td>
+                                            <td th:text="${l.tipoLancamento.tipo}"></td>
+                                            <td style="width: 12%">
+                                                <div class="btn-group pull-right">
+                                                    <a class="btn btn-sm btn-primary" th:id="editar+${l.id}" th:href="@{/editar/{id}(id=${l.id})}" >Editar</a>
+                                                    <a class="delete btn btn-sm btn-danger" th:id="remover+${l.id}" th:href="@{/remover/{id}(id=${l.id})}">Excluir</a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <th colspan="5" class="text-danger">Total saída: R$ <span th:text="${#numbers.formatDecimal(totalSaida,0,'POINT', 2, 'COMMA')}"/> </th>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="5" class="text-success">Total entrada: R$ <span th:text="${#numbers.formatDecimal(totalEntrada,0,'POINT', 2, 'COMMA')}"/> </th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
 
+                        <nav aria-label="Page navigation">
+                            <ul id="paginacao" class="pagination">
+
+                                <li th:each="p : ${paginas}">
+                                    <a th:id="pagina+${p}" th:href="@{/lancamentos/{p}(p=${p})}"><span th:text="${p}"/></a>
+                                </li>
+
+                            </ul>
+                        </nav>
+                    </form>
                 </div>
             </div>
         </div>
@@ -142,6 +161,8 @@
 
                     if(result.length == 0){
                         document.getElementById("divTabelaLancamentos").innerHTML = '<table id="tabelaLancamentos" class="table table-sm table-striped table-hover table-bordered"><thead><tr><th style="text-align: center;">Nenhum resultado encontrado para: '+ $("#itemBusca").val() + '</th></tr></thead></table>';
+                        document.getElementById("paginacao").innerHTML = '';
+                        document.getElementById("p").value = 1;
                         return;
                     }
                     var table = '';
@@ -168,6 +189,11 @@
                         '</tfoot></table>';
 
                     document.getElementById("divTabelaLancamentos").innerHTML = html + rodape;
+                    document.getElementById("tamanhoPagina").innerHTML = data.tamanhoPagina;
+                    document.getElementById("totalRegistros").innerHTML = data.totalRegistros;
+
+                    document.getElementById("paginacao").innerHTML = '';
+                    document.getElementById("p").value = 1;
                 },
                 error: function (e) {
 

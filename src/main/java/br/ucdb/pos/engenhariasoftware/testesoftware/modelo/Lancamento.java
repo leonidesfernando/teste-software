@@ -19,7 +19,10 @@ import static br.ucdb.pos.engenhariasoftware.testesoftware.util.Constantes.DD_MM
 		@NamedQuery(name = "lancamento.maisRecentes", query = "select l from Lancamento l order by l.dataLancamento"),
 		@NamedQuery(name = "lancamento.totalLancamentosPorPeriodo",
 				query = "select new br.ucdb.pos.engenhariasoftware.testesoftware.controller.vo.TotalLancamentoVO(sum(l.valor), l.tipoLancamento) " +
-						" from Lancamento l where l.dataLancamento between :dataInicial and :dataFinal group by l.tipoLancamento")
+						" from Lancamento l where l.dataLancamento between :dataInicial and :dataFinal group by l.tipoLancamento"),
+		@NamedQuery(name = "lancamento.busca", query = "select l from Lancamento l where (upper(l.descricao) like upper( :itemBusca)) " +
+				"  or (upper(l.tipoLancamento) like upper( :itemBusca)) " +
+				"  order by l.dataLancamento ")
 })
 
 @Entity

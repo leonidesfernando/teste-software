@@ -13,12 +13,4 @@ import java.util.List;
 @Repository
 public interface LancamentoRepository extends JpaRepository<Lancamento, Long> {
 
-    @Query("select sum(l.valor) from Lancamento  l where l.tipoLancamento = :tipo")
-    BigDecimal somaValoresPorTipo(@Param("tipo")TipoLancamento tipoLancamento);
-
-    @Query("select l from Lancamento l where (upper(l.descricao) like upper( :itemBusca)) " +
-            " or (upper(l.tipoLancamento) like upper( :itemBusca)) " +
-            " order by l.dataLancamento")
-    List<Lancamento> busca(@Param("itemBusca")String itemBusca);
-
 }
