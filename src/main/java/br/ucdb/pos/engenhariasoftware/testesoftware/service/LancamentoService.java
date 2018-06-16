@@ -2,6 +2,7 @@ package br.ucdb.pos.engenhariasoftware.testesoftware.service;
 
 import br.ucdb.pos.engenhariasoftware.testesoftware.controller.vo.LancamentoVO;
 import br.ucdb.pos.engenhariasoftware.testesoftware.controller.vo.ResultadoVO;
+import br.ucdb.pos.engenhariasoftware.testesoftware.controller.vo.TotalLancamentoCategoriaVO;
 import br.ucdb.pos.engenhariasoftware.testesoftware.controller.vo.TotalLancamentoVO;
 import br.ucdb.pos.engenhariasoftware.testesoftware.modelo.Lancamento;
 import br.ucdb.pos.engenhariasoftware.testesoftware.modelo.TipoLancamento;
@@ -20,9 +21,7 @@ import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static br.ucdb.pos.engenhariasoftware.testesoftware.util.Constantes.DD_MM_YYYY;
 
@@ -88,7 +87,8 @@ public class LancamentoService {
 		String sql = "select count(*) from Lancamento l ";
 		if(StringUtils.hasText(itemBusca)){
 			String where = " where (upper(l.descricao) like upper( :itemBusca)) " +
-					"  or (upper(l.tipoLancamento) like upper( :itemBusca))";
+					"  or (upper(l.tipoLancamento) like upper( :itemBusca)) " +
+					" or (upper(l.categoria) like upper( :itemBusca))";
 			sql += where.replaceAll(":itemBusca", "'%"+itemBusca+"%'");
 		}
 		TypedQuery<Long> query = entityManager.createQuery(sql, Long.class);
@@ -113,14 +113,21 @@ public class LancamentoService {
 		List<LancamentoVO> lancamentos = new ArrayList<>(resultado.size());
 		DecimalFormat df = new DecimalFormat("#,###,##0.00");
 		DateFormat dateFormat = new SimpleDateFormat(DD_MM_YYYY);
-		resultado.stream().forEach(r ->
-				lancamentos.add(
-						new LancamentoVO(r.getId(),
-								r.getDescricao(),
-								df.format(r.getValor()),
-								dateFormat.format(r.getDataLancamento()),
-								r.getTipoLancamento().getTipo())
-				)
+		resultado.stream().forEach(r -> {
+			String categoria = "";
+			if(r.getCategoria() != null){
+				categoria = r.getCategoria().getNome();
+			}
+			lancamentos.add(
+					new LancamentoVO(r.getId(),
+							r.getDescricao(),
+							df.format(r.getValor()),
+							dateFormat.format(r.getDataLancamento()),
+							r.getTipoLancamento().getTipo(),
+							categoria)
+
+					);
+				}
 		);
 
 		return new ResultadoVO(df.format(getTotalSaida(resultado)),
@@ -157,6 +164,13 @@ public class LancamentoService {
 
 	public List<TotalLancamentoVO> getTotalPorPeriodo(Date dataInicial, Date dataFinal){
 		return entityManager.createNamedQuery("lancamento.totalLancamentosPorPeriodo", TotalLancamentoVO.class)
+				.setParameter("dataInicial", dataInicial)
+				.setParameter("dataFinal", dataFinal)
+				.getResultList();
+	}
+
+	public List<TotalLancamentoCategoriaVO> getTotalPorPeriodoPorCategoria(Date dataInicial, Date dataFinal){
+		return entityManager.createNamedQuery("lancamento.totalLancamentosPorPeriodoPorCategoria", TotalLancamentoCategoriaVO.class)
 				.setParameter("dataInicial", dataInicial)
 				.setParameter("dataFinal", dataFinal)
 				.getResultList();

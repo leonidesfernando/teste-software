@@ -94,6 +94,17 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col-md-3 form-group"  th:classappend="${#fields.hasErrors('categoria')}? 'has-error is-invalid'">
+                                <label>Categoria</label>
+                                <select class="form-control input-sm" id="categoria" th:field="*{categoria}" >
+                                    <option label="Selecione" value=""></option>
+                                    <option th:each="cate : ${categorias}"
+                                            th:value="${cate}"
+                                            th:text="${cate.nome}"/>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-2 form-group">
                                 <button id="btnSalvar" type="submit" class="btn btn-primary">Salvar</button>
                             </div>

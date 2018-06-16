@@ -9,12 +9,13 @@ import java.io.Serializable;
 @EqualsAndHashCode(of = {"id"})
 public class LancamentoVO implements Serializable {
 
-    public LancamentoVO(long id, String descricao, String valor, String dataLancamento, String tipoLancamento) {
+    public LancamentoVO(long id, String descricao, String valor, String dataLancamento, String tipoLancamento, String categoria) {
         this.id = id;
         this.descricao = descricao;
         this.valor = valor;
         this.dataLancamento = dataLancamento;
         this.tipoLancamento = tipoLancamento;
+        this.categoria = categoria;
     }
 
     @Getter
@@ -31,4 +32,7 @@ public class LancamentoVO implements Serializable {
 
     @Getter
     private String tipoLancamento;
+
+    @Getter
+    private String categoria;
 }
